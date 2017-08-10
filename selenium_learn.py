@@ -1,6 +1,7 @@
 import unittest
 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
 
@@ -33,10 +34,51 @@ class SeleniumTest(unittest.TestCase):
     def tearDown(self):
         self.driver.close()
 
+class TestSeleniumFind(unittest.TestCase):
+
+    def setUp(self):
+        driver = webdriver.Chrome()
+        self.driver = driver
+
+    def tearDown(self):
+        self.driver.close()
+        self.driver.quit()
+    def test_selenium_find(self):
+        browser = self.driver
+        browser.get("http://www.baidu.com")
+
+        # by id, 等价于 elem_qrcode_img = browser.find_element(By.CLASS_NAME, "qrcode-img")
+        elem_img_qrcode = browser.find_element_by_class_name("qrcode-img")
+        print(elem_img_qrcode.size)
+
+        # by name, 等价于 elem_news_a = browser.find_element(By.NAME, "tj_trnews")
+        elem_a_news = browser.find_element_by_name("tj_trnews")
+        print(elem_a_news.text)
+
+        # by class name, 等价于 elem_qrcode_img = browser.find_element(By.ID, "su")
+        elem_baidu_button = browser.find_element_by_id("su")
+
+        # by tag name, 等价于 elem_p = browser.find_elements(By.TAG_NAME, "p")
+        elem_p_list = browser.find_elements_by_tag_name("p")
+        elem_p_text_list = list(map(lambda x: x.text, elem_p_list))
+        print(elem_p_text_list)
+
+        # 通过链接文本内容, 等价于 elem_tieba_a = browser.find_element(By.LINK_TEXT, "贴吧")
+        elem_a_tieba = browser.find_element_by_link_text("贴吧")
+        print(elem_a_tieba.get_property("href"))
+
+        # 通过部分链接文本内容, 等价于 elem_hao123_a = browser.find_element(By.PARTIAL_LINK_TEXT, "hao")
+        elem_a_hao123 = browser.find_element_by_partial_link_text("hao")
+        print(elem_a_hao123.text + ": " + elem_a_hao123.get_property("href"))
+
+        # by XPath or CSS Selector
+        # elem_input_kw_by_xpath = browser.find_element_by_xpath("//*[@id='kw']")
+        elem_input_kw_by_xpath = browser.find_element(By.XPATH, "//*[@id='kw']")
+        elem_input_kw = browser.find_element_by_css_selector("#kw")
+        elem_input_kw_by_xpath.send_keys("AcFun")
+        elem_input_kw.send_keys("bilibili")
+        elem_baidu_button.click()
 
 if __name__ == '__main__':
-    # browser = webdriver.Chrome()
-    # browser.get("http://www.baidu.com")
-    # browser.close()
-    # browser.quit()
+
     unittest.main()
